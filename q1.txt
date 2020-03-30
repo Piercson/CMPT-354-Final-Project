@@ -1,0 +1,3 @@
+Select C.id, C.title
+From call C JOIN proposal P ON C.id = P.callid
+Where C.Deadline.Month >= USER_MONTH_INPUT AND (P.amount > $20,000 OR #_people > 10)

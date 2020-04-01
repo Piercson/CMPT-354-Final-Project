@@ -1,3 +1,8 @@
 Select C.id, C.title
 From call C JOIN proposal P ON C.id = P.callid
-Where C.Deadline.Month >= USER_MONTH_INPUT AND (P.amount > $20,000 OR #_people > 10)
+Where C.Deadline.Month >= USER_MONTH_INPUT 
+	AND (P.amount > $20,000 
+		 OR 10 < (Select count(col.researcherid)
+		 	  From Collaborator Col
+		 	  group by Col.researcherid
+		 	  having Col.proposalid = P.id));

@@ -15,27 +15,27 @@ def create_tables(conn):
         print(error)
 
 def drop_tables(conn):
-        connection = conn
-        try:
-            cursor = connection.cursor()
-            cursor.execute(open("drop_tables.sql", "r").read())
-            connection.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+    connection = conn
+    try:
+        cursor = connection.cursor()
+        cursor.execute(open("drop_tables.sql", "r").read())
+        connection.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
 
 def insert_data(conn):
-            connection = conn
-            try:
-                cursor = connection.cursor()
-                cursor.execute(open("insert_researchers.sql", "r").read())
-                cursor.execute(open("insert_call.sql", "r").read())
-                cursor.execute(open("insert_proposal.sql", "r").read())
-                cursor.execute(open("insert_collaborator.sql", "r").read())
-                cursor.execute(open("insert_conflicts.sql", "r").read())
-                cursor.execute(open("insert_review.sql", "r").read())
-                connection.commit()
-            except (Exception, psycopg2.DatabaseError) as error:
-                print(error)
+    connection = conn
+    try:
+        cursor = connection.cursor()
+        cursor.execute(open("insert_researchers.sql", "r").read())
+        cursor.execute(open("insert_call.sql", "r").read())
+        cursor.execute(open("insert_proposal.sql", "r").read())
+        cursor.execute(open("insert_collaborator.sql", "r").read())
+        cursor.execute(open("insert_conflicts.sql", "r").read())
+        cursor.execute(open("insert_review.sql", "r").read())
+        connection.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
 
 def run_queries(conn):
     inp = None
@@ -169,5 +169,6 @@ def main():
                 cursor.close()
                 connection.close()
                 print("PostgreSQL connection is closed")
+
 if __name__ == '__main__':
     main()

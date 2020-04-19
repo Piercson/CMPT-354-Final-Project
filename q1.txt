@@ -1,8 +1,8 @@
-Select C.id, C.title
-From call C JOIN proposal P ON C.id = P.callid
-Where C.Deadline.Month >= USER_MONTH_INPUT 
-	AND (P.amount > $20,000 
-		 OR 10 < (Select count(col.researcherid)
-		 	  From Collaborator Col
-		 	  group by Col.researcherid
-		 	  having Col.proposalid = P.id));
+select C.id, C.title
+from Call C
+where C.deadline >= USER_MONTH_INPUT AND C.status = 'open' AND EXISTS ( select *
+									from proposal P
+									where P.callid = C.id AND P.appstatus = 'submitted' AND (P.requestedamount > 20,000 OR 10 < ( 	select count(col.researcherid)
+					 																from collaborator col
+					 																group by col.researcherid
+					 																having col.proposalid = p.id) ));

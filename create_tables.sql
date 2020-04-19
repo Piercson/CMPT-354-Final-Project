@@ -23,7 +23,8 @@ id SERIAL PRIMARY KEY,
 callid INT REFERENCES call(id) NOT NULL,
 pi INT REFERENCES researcher(id) NOT NULL,
 status appstatus DEFAULT 'submitted' NOT NULL,
-amount NUMERIC(14,2)
+requestedamount NUMERIC(14,2),
+awardedamount NUMERIC(14,2)
 );
 
 CREATE TABLE collaborator(

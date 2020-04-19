@@ -78,6 +78,46 @@ def run_queries(conn):
 def run_query1(conn):
     ### Insert code for query 1 here ###
 
+    cur = conn.cursor()
+
+    # run queries to get range of proposals for user and output it.
+    cur.execute("SELECT call.deadline FROM call WHERE call.status = 'open' AND call.deadline <= ALL (SELECT c.deadline FROM call c WHERE c.status = 'open');")
+    result = cur.fetchall()
+    minDate = result[0][0] # result[0][0] == YYYY-MM-DD
+
+    minDate1 = datetime.date(minDate.year, minDate.month, 1)
+    
+    cur.execute("SELECT call.deadline FROM call WHERE call.status = 'open' AND call.deadline >= ALL (SELECT c.deadline FROM call c WHERE c.status = 'open');")
+    result = cur.fetchall()
+    maxDate = result[0][0]
+
+    if maxDate.month == 1 or maxDate.month == 3 or maxDate.month == 5 or maxDate.month == 7 or maxDate.month == 8 or maxDate.month == 10 or maxDate.month == 12:
+        maxDateDay = 31
+    elif maxDate.month == 4 or maxDate.month == 6 or maxDate.month == 9 or maxDate.month == 11:
+        maxDateDay = 30
+    elif maxDate.month == 2:
+        maxDateDay = 28
+
+    maxDate1 = datetime.date(maxDate.year, maxDate.month, maxDateDay)
+
+    # ask user to enter a month in range and validate it
+    validInp = False
+    while(not validInp):
+        print("Select a month and year to query between ", minDate.year, "-", minDate.month, " and ", maxDate.year, "-", maxDate.month)
+        inpMonth = int(input("Enter an month (format: MM | integer from 1-12 | ex. 03): "))
+        inpYear = int(input("Enter a year (format: YYYY | ex. 2020): "))
+        inputDate = datetime.date(inpYear, inpMonth, 1)
+        if inputDate >= minDate1 and inputDate <= maxDate1:
+            validInp = True
+        else:
+            print("Invalid Date entered!")
+
+    print(inputDate)
+
+    # run query on month
+
+    
+
     ### end of query 1 code ###
     pass
 

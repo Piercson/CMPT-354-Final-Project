@@ -84,7 +84,6 @@ def run_query1(conn):
     cur.execute("SELECT call.deadline FROM call WHERE call.status = 'open' AND call.deadline <= ALL (SELECT c.deadline FROM call c WHERE c.status = 'open');")
     result = cur.fetchall()
     minDate = result[0][0] # result[0][0] == YYYY-MM-DD
-
     minDate1 = datetime.date(minDate.year, minDate.month, 1)
     
     cur.execute("SELECT call.deadline FROM call WHERE call.status = 'open' AND call.deadline >= ALL (SELECT c.deadline FROM call c WHERE c.status = 'open');")
@@ -104,7 +103,7 @@ def run_query1(conn):
     validInp = False
     while(not validInp):
         print("Select a month and year to query between ", minDate.year, "-", minDate.month, " and ", maxDate.year, "-", maxDate.month)
-        inpMonth = int(input("Enter an month (format: MM | integer from 1-12 | ex. 03): "))
+        inpMonth = int(input("Enter a month (format: MM | integer from 1-12 | ex. 03): "))
         if inpMonth < 0 or inpMonth > 12:
             print("Invalid month!")
             continue
@@ -116,13 +115,12 @@ def run_query1(conn):
         else:
             print("Invalid Date entered!")
 
-    #print(inputDate)
-
     # run query on month
-    
     query = "select C.id, C.title from Call C where C.deadline >= %s AND C.status = 'open' AND EXISTS (  select * from proposal P where P.callid = C.id AND P.status = 'submitted' AND (P.requestedamount > 20000 OR 10 < (select count(col.researcherid) from collaborator col where col.proposalid = p.id group by col.researcherid) ) );"
     cur.execute(query, [inputDate])
     results = cur.fetchall()
+    
+    print_results(cur, results)
 
     print("\nID, Title:")
     for row in results:

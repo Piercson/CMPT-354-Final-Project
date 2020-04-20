@@ -164,7 +164,17 @@ def run_query5(conn):
 
 def run_query6(conn):
     ### Insert code for query 6 here ###
+    Q6_PROPOSALID = input("Please enter the proposalid: ")
 
+    query = "SELECT r4.id AS available_researchers FROM researcher r4 EXCEPT (SELECT a.* FROM (SELECT c1.researcher1 FROM (SELECT r2.reviewerid FROM review r2 WHERE r2.proposalid = %(iv)s) as conflict1 JOIN conflict c1 ON c1.researcher2 = conflict1.reviewerid UNION SELECT c2.researcher2 FROM (SELECT r3.reviewerid FROM review r3 WHERE r3.proposalid = %(iv)s) as conflict2 JOIN conflict c2 ON c2.researcher1 = conflict2.reviewerid UNION SELECT r1.reviewerid FROM (SELECT r.reviewerid, COUNT(r.id) AS review_count FROM review r WHERE r.submitted = 'false' GROUP BY r.reviewerid) as r1 WHERE r1.review_count >= 3 UNION SELECT r5.reviewerid FROM review r5 WHERE r5.proposalid = %(iv)s) as a) ORDER BY available_researchers;"
+    data = {'iv' : int(Q6_PROPOSALID)}
+    cur.execute(query, data)
+
+    Q6_REVIEWERID = input ("Please select from one of the above available researchers: ")
+
+    query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);" 
+    data = (int(Q6_REVIEWERID), int(Q6_PROPOSALID))
+    cur.execute(query, data)
     ### end of query 6 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 

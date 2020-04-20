@@ -139,19 +139,28 @@ def run_query2(conn):
 
 def run_query3(conn):
     ### Insert code for query 3 here ###
+    Q3_AREA = input("Please enter the area of study: ")
 
+    cur.execute(
+    "SELECT narrowed1.id FROM (SELECT p1.* FROM (SELECT * FROM call c1 WHERE c1.area = %s) as c2 JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 INNER JOIN (SELECT MAX(p3.requestedamount) as max_req FROM (SELECT * FROM call c3 WHERE c3.area = %s) as c4 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 ON narrowed1.requestedamount = narrowed2.max_req;", (Q3_AREA, Q3_AREA))
     ### end of query 3 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query4(conn):
     ### Insert code for query 4 here ###
+    Q4_DATE = input("Please enter the date (YYYY-MM-DD): ")
 
+    cur.execute(
+    "SELECT narrowed1.id FROM (SELECT p1.* FROM (SELECT * FROM call c1 WHERE c1.deadline < %s) as c2 JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 INNER JOIN (SELECT MAX(p3.amount) as max_req FROM (SELECT * FROM call c3 WHERE c3.deadline < %s) as c4 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 ON narrowed1.requestedamount = narrowed2.max_req;", (Q4_DATE, Q4_DATE))
     ### end of query 4 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query5(conn):
     ### Insert code for query 5 here ###
+    Q5_AREA = input("Please enter the area of study: ")
 
+    cur.execute(
+    "SELECT AVG(a.diff) FROM (SELECT ABS(p1.requestedamount - p1.awardedamount) as diff FROM (SELECT * FROM call c1 WHERE c1.area = %s) as c2 JOIN proposal1 p1 ON p1.callid = c2.id WHERE p1.status = 'awarded') as a;", (Q5_AREA))
     ### end of query 5 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 

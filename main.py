@@ -9,8 +9,9 @@ def create_tables(conn):
     connection = conn
     try:
         cursor = connection.cursor()
-        cursor.execute(open("create_tables.sql", "r").read())
+        cursor.execute(open("HaitKiewThomas-Schema.sql", "r").read())
         connection.commit()
+        print("Tables successfully created!\n")
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 
@@ -18,8 +19,9 @@ def drop_tables(conn):
     connection = conn
     try:
         cursor = connection.cursor()
-        cursor.execute(open("drop_tables.sql", "r").read())
+        cursor.execute(open("HaitKiewThomas-Drop.sql", "r").read())
         connection.commit()
+        print("Tables successfully dropped!\n")
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 
@@ -27,13 +29,9 @@ def insert_data(conn):
     connection = conn
     try:
         cursor = connection.cursor()
-        cursor.execute(open("insert_researchers.sql", "r").read())
-        cursor.execute(open("insert_call.sql", "r").read())
-        cursor.execute(open("insert_proposal.sql", "r").read())
-        cursor.execute(open("insert_collaborator.sql", "r").read())
-        cursor.execute(open("insert_conflicts.sql", "r").read())
-        cursor.execute(open("insert_review.sql", "r").read())
+        cursor.execute(open("HaitKiewThomas-Insert.sql", "r").read())
         connection.commit()
+        print("Data successfully inserted!\n")
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 

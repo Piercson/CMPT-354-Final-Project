@@ -139,8 +139,23 @@ def run_query3(conn):
     ### Insert code for query 3 here ###
     Q3_AREA = input("Please enter the area of study: ")
 
-    cur.execute(
-    "SELECT narrowed1.id FROM (SELECT p1.* FROM (SELECT * FROM call c1 WHERE c1.area = %s) as c2 JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 INNER JOIN (SELECT MAX(p3.requestedamount) as max_req FROM (SELECT * FROM call c3 WHERE c3.area = %s) as c4 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 ON narrowed1.requestedamount = narrowed2.max_req;", (Q3_AREA, Q3_AREA))
+    query = "SELECT narrowed1.id \
+            FROM ( \
+                SELECT p1.* \
+                FROM (SELECT * \
+                    FROM call c1 \
+                    WHERE c1.area = %s) as c2 \
+               JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 \
+            INNER JOIN ( \
+                SELECT MAX(p3.requestedamount) as max_req \
+                FROM ( \
+                    SELECT * \
+                    FROM call c3 \
+                    WHERE c3.area = %s) as c4 \
+                JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 \
+            ON narrowed1.requestedamount = narrowed2.max_req;"
+    data = (Q3_AREA, Q3_AREA)
+    cur.execute(query,data)
     ### end of query 3 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 

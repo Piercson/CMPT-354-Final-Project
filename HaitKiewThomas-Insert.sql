@@ -31,11 +31,30 @@ INSERT INTO researcher VALUES
 (DEFAULT, 'Sharon', 'Evans', 'sevans@uofs.ca','UofS');
 
 INSERT INTO call VALUES
-(DEFAULT, 'John student fund: looking for applicants', now() + interval '3 week' , 'NULL', 'Biology', 'closed'),
-(DEFAULT, 'Looking for reseach of shortest paths', now() + interval '2 week' , 'NULL' , 'Computer Science', 'open'),
-(DEFAULT, 'Research for COVID-19', now() + interval '1 week' , 'NULL','Mircobiology', 'open'),
-(DEFAULT, 'Need Research for Classical Conditioning', now() + interval '1 week' , 'NULL', 'Psycology', 'cancelled'),
-(DEFAULT, 'Research Jacobi Iterations', now() + interval '2 week' , 'NULL', 'MATH', 'paused');
+(DEFAULT, 'Student Research Fund', '2018-01-01' , 'NULL', 'Biology', 'closed'),
+(DEFAULT, 'Cancer Research', now() + interval '10 week' , 'NULL', 'Biology', 'open'),
+(DEFAULT, 'Blood Cells Research', now() + interval '20 week' , 'NULL', 'Biology', 'open'),
+(DEFAULT, 'Research of shortest paths', now() + interval '2 week' , 'NULL' , 'Computer Science', 'open'),
+(DEFAULT, 'Dynamic Programming Research', now() + interval '8 week' , 'NULL' , 'Computer Science', 'open'),
+(DEFAULT, 'Greedy Algorithm Research', now() + interval '4 week' , 'NULL' , 'Computer Science', 'open'),
+(DEFAULT, 'Divide and Conquer Algorithm Research', '2019-09-17' , 'NULL' , 'Computer Science', 'closed'),
+(DEFAULT, 'Research for COVID-19 Round 3', now() + interval '8 week' , 'NULL','Mircobiology', 'open'),
+(DEFAULT, 'Research for COVID-19 Round 2', now() + interval '4 week' , 'NULL','Mircobiology', 'open'),
+(DEFAULT, 'Research for COVID-19 Round 1', '2020-03-16' , 'NULL','Mircobiology', 'closed'),
+(DEFAULT, 'Research for HIV', now() + interval '12 week' , 'NULL','Mircobiology', 'open'),
+(DEFAULT, 'Research for Ebola', now() + interval '14 week' , 'NULL','Mircobiology', 'open'),
+(DEFAULT, 'Research for Flu', now() + interval '52 week' , 'NULL','Mircobiology', 'open'),
+(DEFAULT, 'Classical Conditioning Research', now() + interval '1 week' , 'NULL', 'Psycology', 'cancelled'),
+(DEFAULT, 'Clinical Psychology Research', now() + interval '4 week' , 'NULL', 'Psycology', 'open'),
+(DEFAULT, 'Developmental Psychology Research', now() + interval '6 week' , 'NULL', 'Psycology', 'open'),
+(DEFAULT, 'Cognitive Psychology Research', '2018-05-12' , 'NULL', 'Psycology', 'closed'),
+(DEFAULT, 'Neuropsychology Research', '2019-12-12' , 'NULL', 'Psycology', 'closed'),
+(DEFAULT, 'Research Jacobi Iterations', now() + interval '2 week' , 'NULL', 'Math', 'paused');
+(DEFAULT, 'Research Graph Theory', now() + interval '6 week' , 'NULL', 'Math', 'open');
+(DEFAULT, 'Research Discrete Mathematics', now() + interval '22 week' , 'NULL', 'Math', 'open');
+(DEFAULT, 'Research Jacobi Iterations', '2019-10-14' , 'NULL', 'Math', 'closed');
+(DEFAULT, 'Research Matrix Algebra', '2019-07-11' , 'NULL', 'Math', 'closed');
+(DEFAULT, 'Research: Combinatorics', '2020-01-01' , 'NULL', 'Math', 'closed');
 
 INSERT INTO proposal VALUES
 (DEFAULT,1,1,'awarded',36000, 30000),

@@ -49,31 +49,33 @@ def run_queries(conn):
                 \n[6] Assign reviewers to a grant application \
                 \n[7] Check if a meeting room is available \
                 \n[q] Return")
-        inp = input("Enter a menu option: ")
-        print(inp)
+        inp = input("\nEnter a menu option: ")
+        #print(inp)
         if(inp == '1'):
-            print("Running query 1...")
+            print("Running query 1...\n")
             run_query1(conn)
         elif(inp == '2'):
-            print("Running query 2...")
+            print("Running query 2...\n")
             run_query1(conn)
         elif(inp == '3'):
-            print("Running query 3...")
+            print("Running query 3...\n")
             run_query2(conn)
         elif(inp == '4'):
-            print("Running query 4...")
+            print("Running query 4...\n")
             run_query4(conn)
         elif(inp == '5'):
-            print("Running query 5...")
+            print("Running query 5...\n")
             run_query5(conn)
         elif(inp == '6'):
-            print("Running query 6...")
+            print("Running query 6...\n")
             run_query6(conn)
         elif(inp == '7'):
-            print("Running query 7...")
+            print("Running query 7...\n")
             run_query7(conn)
         elif(inp == 'q' or inp == 'Q'):
             print("Returning to previous menu...\n")
+        else:
+            print("invalid input")
 
 def run_query1(conn):
     ### Insert code for query 1 here ###
@@ -116,55 +118,56 @@ def run_query1(conn):
         else:
             print("Invalid Date entered!")
 
-    print(inputDate)
+    #print(inputDate)
 
     # run query on month
     
     query = "select C.id, C.title from Call C where C.deadline >= %s AND C.status = 'open' AND EXISTS (  select * from proposal P where P.callid = C.id AND P.status = 'submitted' AND (P.requestedamount > 20000 OR 10 < (select count(col.researcherid) from collaborator col where col.proposalid = p.id group by col.researcherid) ) );"
     cur.execute(query, [inputDate])
     results = cur.fetchall()
+
+    print("\nID, Title:")
     for row in results:
         print(row)
     
-
     ### end of query 1 code ###
-    pass
+    input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query2(conn):
     ### Insert code for query 2 here ###
 
     ### end of query 2 code ###
-    pass
+    input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query3(conn):
     ### Insert code for query 3 here ###
 
     ### end of query 3 code ###
-    pass
+    input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query4(conn):
     ### Insert code for query 4 here ###
 
     ### end of query 4 code ###
-    pass
+    input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query5(conn):
     ### Insert code for query 5 here ###
 
     ### end of query 5 code ###
-    pass
+    input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query6(conn):
     ### Insert code for query 6 here ###
 
     ### end of query 6 code ###
-    pass
+    input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query7(conn):
     ### Insert code for query 7 here ###
 
     ### end of query 7 code ###
-    pass
+    input("\n==============================\nPress [ENTER] to continue... ")
 
 def main():
     if not sys.stdin.isatty():
@@ -192,10 +195,10 @@ def main():
         print("You are connected to - ", record,"\n")
         inp = None
         while(inp != 'q'):
-            print("What would you like to do? Enter: ")
+            print("What would you like to do? Select: ")
             print("[1] to Create all Tables \n[2] to Drop all Tables\n[3] to Insert all Data\n[4] to Run Queries \n[q] to exit")
-            inp = input("Select a Command: ")
-            print(inp)
+            inp = input("\nEnter a Command: ")
+            #print(inp)
             if(inp == '1'):
                 create_tables(connection)
             elif(inp == '2'):

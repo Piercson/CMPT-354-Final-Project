@@ -210,7 +210,15 @@ def run_query5(conn):
     Q5_AREA = input("Please enter the area of study: ")
 
     cur.execute(
-    "SELECT AVG(a.diff) FROM (SELECT ABS(p1.requestedamount - p1.awardedamount) as diff FROM (SELECT * FROM call c1 WHERE c1.area = %s) as c2 JOIN proposal1 p1 ON p1.callid = c2.id WHERE p1.status = 'awarded') as a;", (Q5_AREA))
+    "SELECT AVG(a.diff) \
+    FROM ( \
+        SELECT ABS(p1.requestedamount - p1.awardedamount) as diff \
+        FROM ( \
+            SELECT * \
+            FROM call c1 \
+            WHERE c1.area = %s) as c2 \
+        JOIN proposal1 p1 ON p1.callid = c2.id \
+        WHERE p1.status = 'awarded') as a;", (Q5_AREA))
     results = cur.fetchall()
     for row in results:
         print(row)

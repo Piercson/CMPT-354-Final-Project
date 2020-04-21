@@ -49,3 +49,12 @@ proposalid INT REFERENCES proposal(id) NOT NULL,
 deadline DATE NOT NULL,
 submitted BOOLEAN DEFAULT 'false' NOT NULL
 );
+
+CREATE TABLE meeting(
+id SERIAL PRIMARY KEY,
+room INT NOT NULL,
+meetdate DATE NOT NULL,
+callid1 INT REFERENCES call(id) NOT NULL,
+callid2 INT REFERENCES call(id) NOT NULL,
+callid3 INT REFERENCES call(id) NOT NULL
+);

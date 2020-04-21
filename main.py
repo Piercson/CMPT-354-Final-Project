@@ -221,7 +221,38 @@ def run_query6(conn):
 
 def run_query7(conn):
     ### Insert code for query 7 here ###
-
+	Q7_DATE = input("Please enter the date for the meeting (YYYY-MM-DD): ")
+	Q7_ROOM = input("Please enter the room for the meeting: ")
+	query = "SELECT * FROM meeting m1 WHERE m1.meetdate = %s AND m1.room = %s;"
+	data = (Q7_DATE, int(Q7_ROOM))
+	cur.execute(query,data)
+	if cur.rowcount>=1:
+		print("The selected room on the specified date is unavailable. Sorry!")
+	else:
+		Q7_CALLID1 = input("Please enter the first callid to be discussed: ")
+		query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid1)s OR m2.callid2 = %(cid1)s OR m2.callid3 = %(cid1)s;"
+		data = {'udate':Q7_DATE, 'cid1':int(Q7_CALLID1)}
+		cur.execute(query, data)
+		if cur.rowcount>=1:
+			print("Scheduling a discussion on this competition is impossible on this day.")
+		else:
+			Q7_CALLID2 = input("Please enter the second callid to be discussed: ")
+			query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid2)s OR m2.callid2 = %(cid2)s OR m2.callid3 = %(cid2)s;"
+			data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID2)}
+			cur.execute(query, data)
+			if cur.rowcount>=1:
+				print("Scheduling a discussion on this competition is impossible on this day.")
+			else:
+				Q7_CALLID3 = input("Please enter the third callid to be discussed: ")
+				query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid3)s OR m2.callid2 = %(cid3)s OR m2.callid3 = %(cid3)s;"
+				data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID3)}
+				cur.execute(query, data)
+				if cur.rowcount>=1:
+					print("Scheduling a discussion on this competition is impossible on this day.")
+				else:
+					query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s");"
+					data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
+					cur.execute(query, data)
     ### end of query 7 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 

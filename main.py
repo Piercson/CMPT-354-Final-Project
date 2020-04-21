@@ -135,9 +135,8 @@ def run_query1(conn):
     cur.execute(query, [inputDate])
     results = cur.fetchall()
 
-    print("\nID, Title:")
     for row in results:
-        print(row)
+        print("Call Id: ", row[0], " Title: ", row[1])
 
     ### end of query 1 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
@@ -159,8 +158,11 @@ def run_query2(conn):
     data = (Q2_AREA, Q2_PI)
     cur.execute(query, data)
     results = cur.fetchall()
-    for row in results:
-        print(row)
+    if(all(results)):
+        print("Principle Investigator specified does not have Proposal in inputted Area")
+    else:
+        for row in results:
+            print("Call ID: ", row[0], " Title: ", row[1])
     ### end of query 2 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -219,10 +221,14 @@ def run_query4(conn):
                 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 \
             ON narrowed1.awardedamount = narrowed2.max_req;"
     data = (Q4_DATE, Q4_DATE)
-    cur.execute(query,data)
-    results = cur.fetchall()
-    for row in results:
-        print(row)
+    try:
+        cur.execute(query,data)
+        results = cur.fetchall()
+        for row in results:
+            print("Proposal ID: ", row[0], "Amount: ", row[1])
+    except (Exception, psycopg2.Error) as error :
+        print ("Error while connecting to PostgreSQL", error)
+        print ("Exception TYPE:", type(error))
     ### end of query 4 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -288,7 +294,7 @@ def run_query6(conn):
         cur.execute(query, data)
         results = cur.fetchall()
         for row in results:
-            print(row)
+            print("Researcher ID ", row[0])
         Q6_REVIEWERID = input ("Please select from one of the above available researchers: ")
 
         query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);"
@@ -298,7 +304,7 @@ def run_query6(conn):
         print ("Error while connecting to PostgreSQL", error)
         print ("Exception TYPE:", type(error))
     finally:
-        print("Created rewiew")
+        print("Created Review!")
         conn.commit()
     ### end of query 6 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
@@ -356,7 +362,7 @@ def main():
     else:
         user1 = input("Username: ")
         password1 = getpass.getpass("Password: ")
-        host1 = "cs-db1.csil.sfu.ca"
+        host1 = input("Host: ")
         database1 = input("Database: ")
 
     connection = None

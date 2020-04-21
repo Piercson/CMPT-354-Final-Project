@@ -77,6 +77,7 @@ INSERT INTO proposal VALUES
 (DEFAULT,9,27,'denied',5000, 0),
 (DEFAULT,10,28,'awarded',30000, 30000),
 (DEFAULT,10,29,'awarded',25000, 25000),
+(DEFAULT,10,27,'awarded',15000, 15000),
 (DEFAULT,11,1,'awarded',100000, 75000),
 (DEFAULT,11,2,'awarded',200000, 150000),
 (DEFAULT,11,3,'denied',100000, 0),

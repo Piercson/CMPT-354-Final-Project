@@ -134,8 +134,6 @@ def run_query1(conn):
                                                                                                                                                                         GROUP BY col.researcherid) ) );"
     cur.execute(query, [inputDate])
     results = cur.fetchall()
-    
-    print_results(cur, results)
 
     print("\nID, Title:")
     for row in results:

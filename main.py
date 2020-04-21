@@ -263,7 +263,7 @@ def run_query7(conn):
 				if cur.rowcount>=1:
 					print("Scheduling a discussion on this competition is impossible on this day.")
 				else:
-					query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s");"
+					query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
 					data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
 					cur.execute(query, data)
     ### end of query 7 code ###

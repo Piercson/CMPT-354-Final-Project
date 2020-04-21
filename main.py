@@ -81,12 +81,20 @@ def run_query1(conn):
     cur = conn.cursor()
 
     # run queries to get range of proposals for user and output it.
-    cur.execute("SELECT call.deadline FROM call WHERE call.status = 'open' AND call.deadline <= ALL (SELECT c.deadline FROM call c WHERE c.status = 'open');")
+    cur.execute("   SELECT call.deadline \
+                    FROM call \
+                    WHERE call.status = 'open' AND call.deadline <= ALL (   SELECT c.deadline \
+                                                                            FROM call c \
+                                                                            WHERE c.status = 'open');")
     result = cur.fetchall()
     minDate = result[0][0] # result[0][0] == YYYY-MM-DD
     minDate1 = datetime.date(minDate.year, minDate.month, 1)
     
-    cur.execute("SELECT call.deadline FROM call WHERE call.status = 'open' AND call.deadline >= ALL (SELECT c.deadline FROM call c WHERE c.status = 'open');")
+    cur.execute("   SELECT call.deadline \
+                    FROM call \
+                    WHERE call.status = 'open' AND call.deadline >= ALL (   SELECT c.deadline \
+                                                                            FROM call c \
+                                                                            WHERE c.status = 'open');")
     result = cur.fetchall()
     maxDate = result[0][0]
 
@@ -116,11 +124,16 @@ def run_query1(conn):
             print("Invalid Date entered!")
 
     # run query on month
-    query = "select C.id, C.title from Call C where C.deadline >= %s AND C.status = 'open' AND EXISTS (  select * from proposal P where P.callid = C.id AND P.status = 'submitted' AND (P.requestedamount > 20000 OR 10 < (select count(col.researcherid) from collaborator col where col.proposalid = p.id group by col.researcherid) ) );"
+    query =    "SELECT C.id, C.title \
+                FROM Call C \
+                WHERE C.deadline >= %s AND C.status = 'open' AND EXISTS (   SELECT * \
+                                                                            FROM proposal P \
+                                                                            WHERE P.callid = C.id AND P.status = 'submitted' AND (P.requestedamount > 20000 OR 10 < (   SELECT COUNT(col.researcherid) \
+                                                                                                                                                                        FROM collaborator col \
+                                                                                                                                                                        WHERE col.proposalid = p.id \
+                                                                                                                                                                        GROUP BY col.researcherid) ) );"
     cur.execute(query, [inputDate])
     results = cur.fetchall()
-    
-    print_results(cur, results)
 
     print("\nID, Title:")
     for row in results:

@@ -176,7 +176,17 @@ INSERT INTO collaborator VALUES
 (DEFAULT,36,25,False);
 
 INSERT INTO conflict VALUES
-(DEFAULT,4,3,'Are collaborators', now() + interval '1 year');
+(DEFAULT,4,6,'Conflict of Interest', now() + interval '1 year'),
+(DEFAULT,6,7,'Conflict of Interest', now() + interval '1 year'),
+(DEFAULT,7,4,'Conflict of Interest', now() + interval '1 year'),
+(DEFAULT,4,12,'Personal Friends', now() + interval '12 year'),
+(DEFAULT,4,13,'Personal Friends', now() + interval '12 year'),
+(DEFAULT,1,2,'--REDACTED--', now() + interval '99 year'),
+(DEFAULT,2,5,'Harassment', now() + interval '5 year'),
+(DEFAULT,21,28,'Stole each others pencils', now() + interval '1 month'),
+(DEFAULT,24,23,'Bit the other person', now() + interval '1 year'),
+(DEFAULT,14,13,'Got into a yelling match', now() + interval '6 month'),
+(DEFAULT,9,16,'Just do not like each other', now() + interval '20 year');
 
 INSERT INTO review VALUES
 (DEFAULT,5,2, now() + interval '2 week', True);

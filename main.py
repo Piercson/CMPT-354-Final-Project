@@ -302,7 +302,6 @@ def run_query7(conn):
     try:
         Q7_DATE = input("Please enter the date for the meeting (YYYY-MM-DD): ")
         year, month, day = map(int, Q7_DATE.split('-'))
-        insert_date = datetime.date(year, month, day)
         Q7_ROOM = input("Please enter the room for the meeting: ")
         query = "SELECT * FROM meeting m1 WHERE m1.meetdate = %s AND m1.room = %s;"
         data = (Q7_DATE, int(Q7_ROOM))
@@ -332,8 +331,8 @@ def run_query7(conn):
         				print("Scheduling a discussion on this competition is impossible on this day.")
         			else:
         				query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
-        				data = (int(Q7_ROOM), insert_date, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
-        				cur.executemany(query, data)
+        				data = (int(Q7_ROOM), datetime.date(year, month, day), int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
+        				cur.execute(query, data)
     except (Exception, psycopg2.Error) as error :
         print ("Error while connecting to PostgreSQL", error)
         print ("Exception TYPE:", type(error))

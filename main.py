@@ -324,15 +324,14 @@ def run_query7(conn):
         		else:
         			Q7_CALLID3 = input("Please enter the third callid to be discussed: ")
         			query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid3)s OR m2.callid2 = %(cid3)s OR m2.callid3 = %(cid3)s);"
-        			data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID3)}
+        			data = {'udate':Q7_DATE, 'cid3':int(Q7_CALLID3)}
         			cur.execute(query, data)
         			if cur.rowcount>=1:
         				print("Scheduling a discussion on this competition is impossible on this day.")
         			else:
-                        print("Meeting create")
-        				query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
+        				query = "INSERT INTO meeting() VALUES (DEFAULT, %s, %s, %s, %s, %s);"
         				data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
-        				cur.execute(query, data)
+        				cur.executemany(query, data)
     except (Exception, psycopg2.Error) as error :
         print ("Error while connecting to PostgreSQL", error)
         print ("Exception TYPE:", type(error))

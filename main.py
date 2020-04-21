@@ -150,6 +150,7 @@ def run_query2(conn):
 
 def run_query3(conn):
     ### Insert code for query 3 here ###
+    cur = conn.cursor()
     Q3_AREA = input("Please enter the area of study: ")
 
     query = "SELECT narrowed1.id \
@@ -169,29 +170,42 @@ def run_query3(conn):
             ON narrowed1.requestedamount = narrowed2.max_req;"
     data = (Q3_AREA, Q3_AREA)
     cur.execute(query,data)
+
+    results = cur.fetchall()
+    for row in results:
+        print(row)
     ### end of query 3 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query4(conn):
     ### Insert code for query 4 here ###
+    cur = conn.cursor()
     Q4_DATE = input("Please enter the date (YYYY-MM-DD): ")
 
     cur.execute(
     "SELECT narrowed1.id FROM (SELECT p1.* FROM (SELECT * FROM call c1 WHERE c1.deadline < %s) as c2 JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 INNER JOIN (SELECT MAX(p3.amount) as max_req FROM (SELECT * FROM call c3 WHERE c3.deadline < %s) as c4 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 ON narrowed1.requestedamount = narrowed2.max_req;", (Q4_DATE, Q4_DATE))
+    results = cur.fetchall()
+    for row in results:
+        print(row)
     ### end of query 4 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query5(conn):
     ### Insert code for query 5 here ###
+    cur = conn.cursor()
     Q5_AREA = input("Please enter the area of study: ")
 
     cur.execute(
     "SELECT AVG(a.diff) FROM (SELECT ABS(p1.requestedamount - p1.awardedamount) as diff FROM (SELECT * FROM call c1 WHERE c1.area = %s) as c2 JOIN proposal1 p1 ON p1.callid = c2.id WHERE p1.status = 'awarded') as a;", (Q5_AREA))
+    results = cur.fetchall()
+    for row in results:
+        print(row)
     ### end of query 5 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query6(conn):
     ### Insert code for query 6 here ###
+    cur = conn.cursor()
     Q6_PROPOSALID = input("Please enter the proposalid: ")
 
     query = "SELECT r4.id AS available_researchers \
@@ -229,11 +243,15 @@ def run_query6(conn):
     query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);"
     data = (int(Q6_REVIEWERID), int(Q6_PROPOSALID))
     cur.execute(query, data)
+    results = cur.fetchall()
+    for row in results:
+        print(row)
     ### end of query 6 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query7(conn):
     ### Insert code for query 7 here ###
+    cur = conn.cursor()
 	Q7_DATE = input("Please enter the date for the meeting (YYYY-MM-DD): ")
 	Q7_ROOM = input("Please enter the room for the meeting: ")
 	query = "SELECT * FROM meeting m1 WHERE m1.meetdate = %s AND m1.room = %s;"
@@ -266,6 +284,9 @@ def run_query7(conn):
 					query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
 					data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
 					cur.execute(query, data)
+    results = cur.fetchall()
+    for row in results:
+        print(row)
     ### end of query 7 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 

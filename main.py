@@ -153,7 +153,7 @@ def run_query3(conn):
     cur = conn.cursor()
     Q3_AREA = input("Please enter the area of study: ")
 
-    query = "SELECT narrowed1.id \
+    query = "SELECT narrowed1.id, narrowed1.requestedamount \
             FROM ( \
                 SELECT p1.* \
                 FROM (SELECT * \
@@ -170,10 +170,8 @@ def run_query3(conn):
             ON narrowed1.requestedamount = narrowed2.max_req;"
     data = (Q3_AREA, Q3_AREA)
     cur.execute(query,data)
-
     results = cur.fetchall()
-    for row in results:
-        print(row)
+    print("Proposal id: ", results[0][0], " Requested amount: ", results[0][1])
     ### end of query 3 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -183,7 +181,10 @@ def run_query4(conn):
     Q4_DATE = input("Please enter the date (YYYY-MM-DD): ")
 
     cur.execute(
-    "SELECT narrowed1.id FROM (SELECT p1.* FROM (SELECT * FROM call c1 WHERE c1.deadline < %s) as c2 JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 INNER JOIN (SELECT MAX(p3.amount) as max_req FROM (SELECT * FROM call c3 WHERE c3.deadline < %s) as c4 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 ON narrowed1.requestedamount = narrowed2.max_req;", (Q4_DATE, Q4_DATE))
+    "SELECT narrowed1.id FROM (SELECT p1.* \
+                                FROM (SELECT * \
+                                    FROM call c1 WHERE c1.deadline < %s) as c2 JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 INNER JOIN (SELECT MAX(p3.amount) as max_req \
+        FROM (SELECT * FROM call c3 WHERE c3.deadline < %s) as c4 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 ON narrowed1.requestedamount = narrowed2.max_req;", (Q4_DATE, Q4_DATE))
     results = cur.fetchall()
     for row in results:
         print(row)
@@ -252,38 +253,38 @@ def run_query6(conn):
 def run_query7(conn):
     ### Insert code for query 7 here ###
     cur = conn.cursor()
-	Q7_DATE = input("Please enter the date for the meeting (YYYY-MM-DD): ")
-	Q7_ROOM = input("Please enter the room for the meeting: ")
-	query = "SELECT * FROM meeting m1 WHERE m1.meetdate = %s AND m1.room = %s;"
-	data = (Q7_DATE, int(Q7_ROOM))
-	cur.execute(query,data)
-	if cur.rowcount>=1:
-		print("The selected room on the specified date is unavailable. Sorry!")
-	else:
-		Q7_CALLID1 = input("Please enter the first callid to be discussed: ")
-		query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid1)s OR m2.callid2 = %(cid1)s OR m2.callid3 = %(cid1)s;"
-		data = {'udate':Q7_DATE, 'cid1':int(Q7_CALLID1)}
-		cur.execute(query, data)
-		if cur.rowcount>=1:
-			print("Scheduling a discussion on this competition is impossible on this day.")
-		else:
-			Q7_CALLID2 = input("Please enter the second callid to be discussed: ")
-			query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid2)s OR m2.callid2 = %(cid2)s OR m2.callid3 = %(cid2)s;"
-			data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID2)}
-			cur.execute(query, data)
-			if cur.rowcount>=1:
-				print("Scheduling a discussion on this competition is impossible on this day.")
-			else:
-				Q7_CALLID3 = input("Please enter the third callid to be discussed: ")
-				query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid3)s OR m2.callid2 = %(cid3)s OR m2.callid3 = %(cid3)s;"
-				data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID3)}
-				cur.execute(query, data)
-				if cur.rowcount>=1:
-					print("Scheduling a discussion on this competition is impossible on this day.")
-				else:
-					query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
-					data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
-					cur.execute(query, data)
+    Q7_DATE = input("Please enter the date for the meeting (YYYY-MM-DD): ")
+    Q7_ROOM = input("Please enter the room for the meeting: ")
+    query = "SELECT * FROM meeting m1 WHERE m1.meetdate = %s AND m1.room = %s;"
+    data = (Q7_DATE, int(Q7_ROOM))
+    cur.execute(query,data)
+    if cur.rowcount>=1:
+    	print("The selected room on the specified date is unavailable. Sorry!")
+    else:
+    	Q7_CALLID1 = input("Please enter the first callid to be discussed: ")
+    	query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid1)s OR m2.callid2 = %(cid1)s OR m2.callid3 = %(cid1)s;"
+    	data = {'udate':Q7_DATE, 'cid1':int(Q7_CALLID1)}
+    	cur.execute(query, data)
+    	if cur.rowcount>=1:
+    		print("Scheduling a discussion on this competition is impossible on this day.")
+    	else:
+    		Q7_CALLID2 = input("Please enter the second callid to be discussed: ")
+    		query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid2)s OR m2.callid2 = %(cid2)s OR m2.callid3 = %(cid2)s;"
+    		data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID2)}
+    		cur.execute(query, data)
+    		if cur.rowcount>=1:
+    			print("Scheduling a discussion on this competition is impossible on this day.")
+    		else:
+    			Q7_CALLID3 = input("Please enter the third callid to be discussed: ")
+    			query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid3)s OR m2.callid2 = %(cid3)s OR m2.callid3 = %(cid3)s;"
+    			data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID3)}
+    			cur.execute(query, data)
+    			if cur.rowcount>=1:
+    				print("Scheduling a discussion on this competition is impossible on this day.")
+    			else:
+    				query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
+    				data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
+    				cur.execute(query, data)
     results = cur.fetchall()
     for row in results:
         print(row)
@@ -295,10 +296,14 @@ def main():
         print("Use 'winpty python main.py' instead")
         return
     else:
-        user1 = input("Username: ")
-        password1 = getpass.getpass("Password: ")
-        host1 = input("Host: ")
-        database1 = input("Database: ")
+        # user1 = input("Username: ")
+        # password1 = getpass.getpass("Password: ")
+        # host1 = input("Host: ")
+        # database1 = input("Database: ")
+        user1 = "pta36"
+        password1 = "Boeing757!"
+        host1 = "cs-db1.csil.sfu.ca"
+        database1 = "cmpt354-pta36"
     connection = None
     try:
         connection = psycopg2.connect(user = user1,

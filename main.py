@@ -254,45 +254,52 @@ def run_query5(conn):
 def run_query6(conn):
     ### Insert code for query 6 here ###
     cur = conn.cursor()
-    Q6_PROPOSALID = input("Please enter the proposalid: ")
+    try:
+        Q6_PROPOSALID = input("Please enter the proposalid: ")
 
-    query = "SELECT r4.id AS available_researchers \
-            FROM researcher r4 \
-            EXCEPT \
-            (SELECT a.* \
-            FROM (SELECT c1.researcher1 \
-            FROM ( \
-            SELECT r2.reviewerid \
-            FROM review r2 \
-            WHERE r2.proposalid = %(iv)s) as conflict1 \
-            JOIN conflict c1 ON c1.researcher2 = conflict1.reviewerid \
-            UNION \
-            SELECT c2.researcher2 \
-            FROM (SELECT r3.reviewerid \
-            FROM review r3 \
-            WHERE r3.proposalid = %(iv)s) as conflict2 \
-            JOIN conflict c2 ON c2.researcher1 = conflict2.reviewerid \
-            UNION \
-            SELECT r1.reviewerid \
-            FROM (SELECT r.reviewerid, COUNT(r.id) AS review_count \
-            FROM review r \
-            WHERE r.submitted = 'false' \
-            GROUP BY r.reviewerid) as r1 \
-            WHERE r1.review_count >= 3 \
-            UNION \
-            SELECT r5.reviewerid \
-            FROM review r5 WHERE r5.proposalid = %(iv)s) as a) \
-            ORDER BY available_researchers;"
-    data = {'iv': int(Q6_PROPOSALID)}
-    cur.execute(query, data)
-    results = cur.fetchall()
-    for row in results:
-        print(row)
-    Q6_REVIEWERID = input ("Please select from one of the above available researchers: ")
+        query = "SELECT r4.id AS available_researchers \
+                FROM researcher r4 \
+                EXCEPT \
+                (SELECT a.* \
+                FROM (SELECT c1.researcher1 \
+                FROM ( \
+                SELECT r2.reviewerid \
+                FROM review r2 \
+                WHERE r2.proposalid = %(iv)s) as conflict1 \
+                JOIN conflict c1 ON c1.researcher2 = conflict1.reviewerid \
+                UNION \
+                SELECT c2.researcher2 \
+                FROM (SELECT r3.reviewerid \
+                FROM review r3 \
+                WHERE r3.proposalid = %(iv)s) as conflict2 \
+                JOIN conflict c2 ON c2.researcher1 = conflict2.reviewerid \
+                UNION \
+                SELECT r1.reviewerid \
+                FROM (SELECT r.reviewerid, COUNT(r.id) AS review_count \
+                FROM review r \
+                WHERE r.submitted = 'false' \
+                GROUP BY r.reviewerid) as r1 \
+                WHERE r1.review_count >= 3 \
+                UNION \
+                SELECT r5.reviewerid \
+                FROM review r5 WHERE r5.proposalid = %(iv)s) as a) \
+                ORDER BY available_researchers;"
+        data = {'iv': int(Q6_PROPOSALID)}
+        cur.execute(query, data)
+        results = cur.fetchall()
+        for row in results:
+            print(row)
+        Q6_REVIEWERID = input ("Please select from one of the above available researchers: ")
 
-    query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);"
-    data = (int(Q6_REVIEWERID), int(Q6_PROPOSALID))
-    cur.execute(query, data)
+        query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);"
+        data = (int(Q6_REVIEWERID), int(Q6_PROPOSALID))
+        cur.execute(query, data)
+    except (Exception, psycopg2.Error) as error :
+        print ("Error while connecting to PostgreSQL", error)
+        print ("Exception TYPE:", type(error))
+    finally:
+        print("Created rewiew")
+        conn.commit()
     ### end of query 6 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -336,6 +343,9 @@ def run_query7(conn):
     except (Exception, psycopg2.Error) as error :
         print ("Error while connecting to PostgreSQL", error)
         print ("Exception TYPE:", type(error))
+    finally:
+        print("Meeting Created")
+        conn.commit()
     ### end of query 7 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -344,15 +354,11 @@ def main():
         print("Use 'winpty python main.py' instead")
         return
     else:
-        # user1 = input("Username: ")
-        # password1 = getpass.getpass("Password: ")
-        # host1 = "cs-db1.csil.sfu.ca"
-        # database1 = input("Database: ")
-
-        user1 = "pta36"
-        password1 = "Boeing757!"
+        user1 = input("Username: ")
+        password1 = getpass.getpass("Password: ")
         host1 = "cs-db1.csil.sfu.ca"
-        database1 = "cmpt354-pta36"
+        database1 = input("Database: ")
+
     connection = None
     try:
         connection = psycopg2.connect(user = user1,

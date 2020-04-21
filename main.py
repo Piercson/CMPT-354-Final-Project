@@ -180,7 +180,7 @@ def run_query4(conn):
     cur = conn.cursor()
     Q4_DATE = input("Please enter the date (YYYY-MM-DD): ")
 
-    query = "SELECT narrowed1.id, narrowed1.requestedamount \
+    query = "SELECT narrowed1.id, narrowed1.awardedamount \
             FROM ( \
                 SELECT p1.* \
                 FROM ( \
@@ -189,13 +189,13 @@ def run_query4(conn):
                     WHERE c1.deadline < %s) as c2 \
                 JOIN proposal p1 ON p1.callid = c2.id) as narrowed1 \
             INNER JOIN ( \
-                SELECT MAX(p3.requestedamount) as max_req \
+                SELECT MAX(p3.awardedamount) as max_req \
                 FROM ( \
                     SELECT * \
                     FROM call c3 \
                     WHERE c3.deadline < %s) as c4 \
                 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 \
-            ON narrowed1.requestedamount = narrowed2.max_req;"
+            ON narrowed1.awardedamount = narrowed2.max_req;"
     data = (Q4_DATE, Q4_DATE)
     cur.execute(query,data)
     results = cur.fetchall()

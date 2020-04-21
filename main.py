@@ -54,10 +54,10 @@ def run_queries(conn):
             run_query1(conn)
         elif(inp == '2'):
             print("Running query 2...\n")
-            run_query1(conn)
+            run_query2(conn)
         elif(inp == '3'):
             print("Running query 3...\n")
-            run_query2(conn)
+            run_query3(conn)
         elif(inp == '4'):
             print("Running query 4...\n")
             run_query4(conn)
@@ -89,7 +89,7 @@ def run_query1(conn):
     result = cur.fetchall()
     minDate = result[0][0] # result[0][0] == YYYY-MM-DD
     minDate1 = datetime.date(minDate.year, minDate.month, 1)
-    
+
     cur.execute("   SELECT call.deadline \
                     FROM call \
                     WHERE call.status = 'open' AND call.deadline >= ALL (   SELECT c.deadline \
@@ -138,7 +138,7 @@ def run_query1(conn):
     print("\nID, Title:")
     for row in results:
         print(row)
-    
+
     ### end of query 1 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -226,7 +226,7 @@ def run_query6(conn):
 
     Q6_REVIEWERID = input ("Please select from one of the above available researchers: ")
 
-    query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);" 
+    query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);"
     data = (int(Q6_REVIEWERID), int(Q6_PROPOSALID))
     cur.execute(query, data)
     ### end of query 6 code ###

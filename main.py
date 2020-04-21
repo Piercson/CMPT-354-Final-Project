@@ -85,7 +85,7 @@ def run_query1(conn):
     result = cur.fetchall()
     minDate = result[0][0] # result[0][0] == YYYY-MM-DD
     minDate1 = datetime.date(minDate.year, minDate.month, 1)
-    
+
     cur.execute("SELECT call.deadline FROM call WHERE call.status = 'open' AND call.deadline >= ALL (SELECT c.deadline FROM call c WHERE c.status = 'open');")
     result = cur.fetchall()
     maxDate = result[0][0]
@@ -119,13 +119,13 @@ def run_query1(conn):
     query = "select C.id, C.title from Call C where C.deadline >= %s AND C.status = 'open' AND EXISTS (  select * from proposal P where P.callid = C.id AND P.status = 'submitted' AND (P.requestedamount > 20000 OR 10 < (select count(col.researcherid) from collaborator col where col.proposalid = p.id group by col.researcherid) ) );"
     cur.execute(query, [inputDate])
     results = cur.fetchall()
-    
+
     print_results(cur, results)
 
     print("\nID, Title:")
     for row in results:
         print(row)
-    
+
     ### end of query 1 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -213,7 +213,7 @@ def run_query6(conn):
 
     Q6_REVIEWERID = input ("Please select from one of the above available researchers: ")
 
-    query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);" 
+    query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);"
     data = (int(Q6_REVIEWERID), int(Q6_PROPOSALID))
     cur.execute(query, data)
     ### end of query 6 code ###
@@ -230,10 +230,14 @@ def main():
         print("Use 'winpty python main.py' instead")
         return
     else:
-        user1 = input("Username: ")
-        password1 = getpass.getpass("Password: ")
-        host1 = input("Host: ")
-        database1 = input("Database: ")
+        user1 = "pta36"
+        password1 = "Boeing757!"
+        host1 = "cs-db1.csil.sfu.ca"
+        database1 = "cmpt354-pta36"
+        # user1 = input("Username: ")
+        # password1 = getpass.getpass("Password: ")
+        # host1 = input("Host: ")
+        # database1 = input("Database: ")
     connection = None
     try:
         connection = psycopg2.connect(user = user1,

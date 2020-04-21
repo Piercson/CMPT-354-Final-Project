@@ -144,7 +144,23 @@ def run_query1(conn):
 
 def run_query2(conn):
     ### Insert code for query 2 here ###
-
+    cur = conn.cursor()
+    query = "SELECT C.id, C.title \
+            FROM Call C \
+            WHERE C.area = %s AND C.status = 'open' AND EXISTS (	SELECT * \
+							                                        FROM Proposal P \
+							                                        WHERE P.callid = C.id AND P.status = 'submitted' and P.pi = %s AND (P.requestedamount > 20000 OR 10 < (	SELECT COUNT(col.researcherid) \
+																				                                                                                            FROM Collaborator col \
+																				                                                                                            WHERE col.proposalid = p.id \
+																				                                                                                            GROUP BY col.researcherid) ) );"
+    
+    Q2_AREA = input("Please enter the area of study: ")
+    Q2_PI = input("Please enter the Principle Investigator's ID: ")
+    data = (Q2_AREA, Q2_PI)
+    cur.execute(query, data)
+    results = cur.fetchall()
+    for row in results:
+        print(row)
     ### end of query 2 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 

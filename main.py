@@ -169,9 +169,15 @@ def run_query3(conn):
                 JOIN proposal p3 ON p3.callid = c4.id) as narrowed2 \
             ON narrowed1.requestedamount = narrowed2.max_req;"
     data = (Q3_AREA, Q3_AREA)
-    cur.execute(query,data)
-    results = cur.fetchall()
-    print("Proposal id: ", results[0][0], " Requested amount: ", results[0][1])
+    try:
+        cur.execute(query,data)
+        results = cur.fetchall()
+        print("Proposal id: ", results[0][0], " Requested amount: ", results[0][1])
+    except IndexError as err :
+        print("Area not in call table")
+    except (Exception, psycopg2.Error) as error :
+        print ("Error while connecting to PostgreSQL", error)
+        print ("Exception TYPE:", type(error))
     ### end of query 3 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -317,14 +323,10 @@ def main():
         print("Use 'winpty python main.py' instead")
         return
     else:
-        # user1 = input("Username: ")
-        # password1 = getpass.getpass("Password: ")
-        # host1 = input("Host: ")
-        # database1 = input("Database: ")
-        user1 = "pta36"
-        password1 = "Boeing757!"
+        user1 = input("Username: ")
+        password1 = getpass.getpass("Password: ")
         host1 = "cs-db1.csil.sfu.ca"
-        database1 = "cmpt354-pta36"
+        database1 = input("Database: ")
     connection = None
     try:
         connection = psycopg2.connect(user = user1,

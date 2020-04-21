@@ -7,3 +7,4 @@ DROP TABLE researcher;
 DROP TABLE meeting;
 DROP TYPE callstatus;
 DROP TYPE appstatus;
+DROP TABLE meeting;

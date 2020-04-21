@@ -153,7 +153,7 @@ def run_query2(conn):
 																				                                                                                            FROM Collaborator col \
 																				                                                                                            WHERE col.proposalid = p.id \
 																				                                                                                            GROUP BY col.researcherid) ) );"
-    
+
     Q2_AREA = input("Please enter the area of study: ")
     Q2_PI = input("Please enter the Principle Investigator's ID: ")
     data = (Q2_AREA, Q2_PI)
@@ -229,21 +229,25 @@ def run_query4(conn):
 def run_query5(conn):
     ### Insert code for query 5 here ###
     cur = conn.cursor()
-    Q5_AREA = input("Please enter the area of study: ")
-
-    cur.execute(
-    "SELECT AVG(a.diff) \
-    FROM ( \
-        SELECT ABS(p1.requestedamount - p1.awardedamount) as diff \
+    try:
+        Q5_AREA = input("Please enter the area of study: ")
+        query = "SELECT AVG(a.diff) \
         FROM ( \
-            SELECT * \
-            FROM call c1 \
-            WHERE c1.area = %s) as c2 \
-        JOIN proposal1 p1 ON p1.callid = c2.id \
-        WHERE p1.status = 'awarded') as a;", (Q5_AREA))
-    results = cur.fetchall()
-    for row in results:
-        print(row)
+            SELECT ABS(p1.requestedamount - p1.awardedamount) as diff \
+            FROM ( \
+                SELECT * \
+                FROM call c1 \
+                WHERE c1.area = %s) as c2 \
+            JOIN proposal p1 ON p1.callid = c2.id \
+            WHERE p1.status = 'awarded') as a;"
+        data = (Q5_AREA, )
+        cur.execute(query, data)
+        results = cur.fetchall()
+        for row in results:
+            print("Area: ", data[0], "\nAverage requested/awarded discrepancy: ", row[0])
+    except (Exception, psycopg2.Error) as error :
+        print ("Error while connecting to PostgreSQL", error)
+        print ("Exception TYPE:", type(error))
     ### end of query 5 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -281,56 +285,57 @@ def run_query6(conn):
             ORDER BY available_researchers;"
     data = {'iv': int(Q6_PROPOSALID)}
     cur.execute(query, data)
-
+    results = cur.fetchall()
+    for row in results:
+        print(row)
     Q6_REVIEWERID = input ("Please select from one of the above available researchers: ")
 
     query = "INSERT INTO review VALUES(DEFAULT, %s, %s, now() + interval '2 week', false);"
     data = (int(Q6_REVIEWERID), int(Q6_PROPOSALID))
     cur.execute(query, data)
-    results = cur.fetchall()
-    for row in results:
-        print(row)
     ### end of query 6 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
 def run_query7(conn):
     ### Insert code for query 7 here ###
     cur = conn.cursor()
-    Q7_DATE = input("Please enter the date for the meeting (YYYY-MM-DD): ")
-    Q7_ROOM = input("Please enter the room for the meeting: ")
-    query = "SELECT * FROM meeting m1 WHERE m1.meetdate = %s AND m1.room = %s;"
-    data = (Q7_DATE, int(Q7_ROOM))
-    cur.execute(query,data)
-    if cur.rowcount>=1:
-    	print("The selected room on the specified date is unavailable. Sorry!")
-    else:
-    	Q7_CALLID1 = input("Please enter the first callid to be discussed: ")
-    	query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid1)s OR m2.callid2 = %(cid1)s OR m2.callid3 = %(cid1)s;"
-    	data = {'udate':Q7_DATE, 'cid1':int(Q7_CALLID1)}
-    	cur.execute(query, data)
-    	if cur.rowcount>=1:
-    		print("Scheduling a discussion on this competition is impossible on this day.")
-    	else:
-    		Q7_CALLID2 = input("Please enter the second callid to be discussed: ")
-    		query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid2)s OR m2.callid2 = %(cid2)s OR m2.callid3 = %(cid2)s;"
-    		data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID2)}
-    		cur.execute(query, data)
-    		if cur.rowcount>=1:
-    			print("Scheduling a discussion on this competition is impossible on this day.")
-    		else:
-    			Q7_CALLID3 = input("Please enter the third callid to be discussed: ")
-    			query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid3)s OR m2.callid2 = %(cid3)s OR m2.callid3 = %(cid3)s;"
-    			data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID3)}
-    			cur.execute(query, data)
-    			if cur.rowcount>=1:
-    				print("Scheduling a discussion on this competition is impossible on this day.")
-    			else:
-    				query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
-    				data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
-    				cur.execute(query, data)
-    results = cur.fetchall()
-    for row in results:
-        print(row)
+    try:
+        Q7_DATE = input("Please enter the date for the meeting (YYYY-MM-DD): ")
+        Q7_ROOM = input("Please enter the room for the meeting: ")
+        query = "SELECT * FROM meeting m1 WHERE m1.meetdate = %s AND m1.room = %s;"
+        data = (Q7_DATE, int(Q7_ROOM))
+        cur.execute(query,data)
+        if cur.rowcount>=1:
+        	print("The selected room on the specified date is unavailable. Sorry!")
+        else:
+        	Q7_CALLID1 = input("Please enter the first callid to be discussed: ")
+        	query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid1)s OR m2.callid2 = %(cid1)s OR m2.callid3 = %(cid1)s);"
+        	data = {'udate':Q7_DATE, 'cid1':int(Q7_CALLID1)}
+        	cur.execute(query, data)
+        	if cur.rowcount>=1:
+        		print("Scheduling a discussion on this competition is impossible on this day.")
+        	else:
+        		Q7_CALLID2 = input("Please enter the second callid to be discussed: ")
+        		query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid2)s OR m2.callid2 = %(cid2)s OR m2.callid3 = %(cid2)s);"
+        		data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID2)}
+        		cur.execute(query, data)
+        		if cur.rowcount>=1:
+        			print("Scheduling a discussion on this competition is impossible on this day.")
+        		else:
+        			Q7_CALLID3 = input("Please enter the third callid to be discussed: ")
+        			query = "SELECT * FROM meeting m2 WHERE m2.meetdate = %(udate)s AND (m2.callid1 = %(cid3)s OR m2.callid2 = %(cid3)s OR m2.callid3 = %(cid3)s);"
+        			data = {'udate':Q7_DATE, 'cid2':int(Q7_CALLID3)}
+        			cur.execute(query, data)
+        			if cur.rowcount>=1:
+        				print("Scheduling a discussion on this competition is impossible on this day.")
+        			else:
+                        print("Meeting create")
+        				query = "INSERT INTO meeting VALUES (DEFAULT, %s, %s, %s, %s, %s);"
+        				data = (int(Q7_ROOM), Q7_DATE, int(Q7_CALLID1), int(Q7_CALLID2), int(Q7_CALLID3))
+        				cur.execute(query, data)
+    except (Exception, psycopg2.Error) as error :
+        print ("Error while connecting to PostgreSQL", error)
+        print ("Exception TYPE:", type(error))
     ### end of query 7 code ###
     input("\n==============================\nPress [ENTER] to continue... ")
 
@@ -339,10 +344,15 @@ def main():
         print("Use 'winpty python main.py' instead")
         return
     else:
-        user1 = input("Username: ")
-        password1 = getpass.getpass("Password: ")
+        # user1 = input("Username: ")
+        # password1 = getpass.getpass("Password: ")
+        # host1 = "cs-db1.csil.sfu.ca"
+        # database1 = input("Database: ")
+
+        user1 = "pta36"
+        password1 = "Boeing757!"
         host1 = "cs-db1.csil.sfu.ca"
-        database1 = input("Database: ")
+        database1 = "cmpt354-pta36"
     connection = None
     try:
         connection = psycopg2.connect(user = user1,
